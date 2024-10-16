@@ -5,7 +5,7 @@ const Download = () => {
     <section>
       <div
         name="download"
-        className="g7 relative pb-32 pt-24 max-lg:pb-24 max-md:py-16"
+        className="g7 relative pb-32 pt-24 hidden md:block max-lg:pb-24 max-md:py-16"
       >
         <div className="container">
           <div className="flex items-center">
@@ -14,7 +14,7 @@ const Download = () => {
                 <li className="download_tech-link download_tech-link_last-before download_tech-link_last-after">
                  
 
-                  <span className="download_tech-icon ">
+                  <span className="download_tech-icon  hidden lg:block ">
                     {" "}
                     <img
                       src={logo}
