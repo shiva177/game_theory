@@ -2,20 +2,22 @@ import React from 'react';
 import { deleteBooking } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
 
-const BookingGrid = ({ selectedCenter, selectedSport, bookings, onEditBooking, onBookingDeleted }) => {
+const BookingGrid = ({ selectedCenter, selectedSport, allBookings, selectedDate, onEditBooking, onBookingDeleted }) => {
   const hours = ["4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM"];
 
+  // Filter bookings based on the selected date
+  const bookingsForSelectedDate = allBookings[selectedDate] || [];
+
   const handleDelete = (bookingId) => {
-    deleteBooking(selectedCenter.id, selectedSport.id, bookingId); // Delete specific to center and sport
-    onBookingDeleted(bookingId); // Trigger delete in parent
+    deleteBooking(selectedCenter.id, selectedSport.id, selectedDate, bookingId);
+    onBookingDeleted(bookingId);
     toast.success("Booking deleted successfully!");
   };
 
   return (
     <div className="mt-6">
-      {/* Dynamic Heading to show center and sport */}
       <h2 className="text-xl font-semibold mb-4">
-        Schedule of "{selectedSport.name}" at "{selectedCenter.name}"
+        Schedule of "{selectedSport.name}" at "{selectedCenter.name}" on {selectedDate}
       </h2>
 
       <div className="grid grid-cols-7 gap-4">
@@ -29,7 +31,7 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onEditBooking, o
             <div className="font-bold text-center">Court {court}</div>
 
             {hours.map((hour, index) => {
-              const booking = bookings.find(b => b.startTime === hour && b.courtId === court);
+              const booking = bookingsForSelectedDate.find(b => b.startTime === hour && b.courtId === court);
 
               return (
                 <div key={index} className="border border-gray-300 p-2 text-center">
@@ -38,7 +40,7 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onEditBooking, o
                       <p>{booking.customerName}</p>
                       <button
                         className="text-blue-500"
-                        onClick={() => onEditBooking(booking)} // Trigger edit in parent
+                        onClick={() => onEditBooking(booking)}
                       >
                         Edit
                       </button>

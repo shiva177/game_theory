@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { saveBooking, updateBooking } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
 
-const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated, editingBooking, onBookingUpdated }) => {
+const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated, editingBooking, onBookingUpdated, selectedDate }) => {
   const [customerName, setCustomerName] = useState('');
   const [selectedCourt, setSelectedCourt] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [error, setError] = useState('');
 
-  // Populate form if editing an existing booking
   useEffect(() => {
     if (editingBooking) {
       setCustomerName(editingBooking.customerName);
@@ -21,7 +20,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
     e.preventDefault();
 
     // Input validation
-    if (!customerName || !selectedCourt || !selectedTime) {
+    if (!customerName || !selectedCourt || !selectedTime || !selectedDate) {
       setError('Please fill out all fields.');
       toast.error('Please fill out all fields.');
       return;
@@ -34,14 +33,15 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
         customerName,
         courtId: parseInt(selectedCourt),
         startTime: selectedTime,
+        date: selectedDate
       };
-      updateBooking(selectedCenter.id, selectedSport.id, updatedBooking);
+      updateBooking(selectedCenter.id, selectedSport.id, selectedDate, updatedBooking);
       onBookingUpdated(updatedBooking);
       toast.success('Booking updated successfully!');
     } else {
       // Check for double booking
-      const bookings = JSON.parse(localStorage.getItem('bookings')) || {};
-      const isSlotTaken = bookings[selectedCenter.id]?.[selectedSport.id]?.some(
+      const allBookings = JSON.parse(localStorage.getItem('bookings')) || {};
+      const isSlotTaken = allBookings[selectedCenter.id]?.[selectedSport.id]?.[selectedDate]?.some(
         booking => booking.courtId === parseInt(selectedCourt) && booking.startTime === selectedTime
       );
 
@@ -58,10 +58,11 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
         sportId: selectedSport.id,
         courtId: parseInt(selectedCourt),
         startTime: selectedTime,
-        customerName
+        customerName,
+        date: selectedDate
       };
-      saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save the booking specific to the center and sport
-      onBookingCreated(newBooking); // Trigger after successful creation
+      saveBooking(selectedCenter.id, selectedSport.id, selectedDate, newBooking);
+      onBookingCreated(newBooking);
       toast.success('Booking created successfully!');
     }
 

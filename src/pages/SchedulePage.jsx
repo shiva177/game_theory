@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CenterSelector from '../components/CenterSelector';
 import BookingGrid from '../components/BookingGrid';
 import BookingForm from '../components/BookingForm';
-import { getBookings } from '../utils/localStorageUtils';
+import { getAllBookings } from '../utils/localStorageUtils';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -30,28 +30,38 @@ const centersData = [
 function SchedulePage() {
   const [selectedCenter, setSelectedCenter] = useState(centersData[0]);
   const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]);
-  const [bookings, setBookings] = useState(getBookings(selectedCenter.id, selectedSport.id));
-  const [editingBooking, setEditingBooking] = useState(null); // Add state for editing
+  const [allBookings, setAllBookings] = useState({});
+  const [selectedDate, setSelectedDate] = useState(''); // State for date
+  const [editingBooking, setEditingBooking] = useState(null);
 
   useEffect(() => {
-    setBookings(getBookings(selectedCenter.id, selectedSport.id));
+    if (selectedCenter && selectedSport) {
+      setAllBookings(getAllBookings(selectedCenter.id, selectedSport.id));
+    }
   }, [selectedCenter, selectedSport]);
 
   const handleBookingCreated = (newBooking) => {
-    setBookings([...bookings, newBooking]);
+    setAllBookings(prev => ({
+      ...prev,
+      [selectedDate]: [...(prev[selectedDate] || []), newBooking]
+    }));
   };
 
   const handleBookingUpdated = (updatedBooking) => {
-    const updatedBookings = bookings.map(booking =>
-      booking.id === updatedBooking.id ? updatedBooking : booking
-    );
-    setBookings(updatedBookings);
-    setEditingBooking(null); // Clear editing state
+    setAllBookings(prev => ({
+      ...prev,
+      [selectedDate]: prev[selectedDate].map(booking =>
+        booking.id === updatedBooking.id ? updatedBooking : booking
+      )
+    }));
+    setEditingBooking(null);
   };
 
   const handleBookingDeleted = (bookingId) => {
-    const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
-    setBookings(updatedBookings);
+    setAllBookings(prev => ({
+      ...prev,
+      [selectedDate]: prev[selectedDate].filter(booking => booking.id !== bookingId)
+    }));
   };
 
   return (
@@ -63,21 +73,31 @@ function SchedulePage() {
           onSelectSport={setSelectedSport}
         />
 
-        {selectedCenter && selectedSport && (
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="mt-4 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
+          placeholder="Select Date"
+        />
+
+        {selectedCenter && selectedSport && selectedDate && (
           <>
             <BookingForm
               selectedCenter={selectedCenter}
               selectedSport={selectedSport}
               availableCourts={selectedSport.courts}
               onBookingCreated={handleBookingCreated}
-              editingBooking={editingBooking} // Pass editing booking
-              onBookingUpdated={handleBookingUpdated} // Handle booking update
+              editingBooking={editingBooking}
+              onBookingUpdated={handleBookingUpdated}
+              selectedDate={selectedDate} // Pass the selected date
             />
             <BookingGrid
               selectedCenter={selectedCenter}
               selectedSport={selectedSport}
-              bookings={bookings}
-              onEditBooking={setEditingBooking} // Set booking for edit
+              allBookings={allBookings} // Pass all bookings
+              selectedDate={selectedDate} // Pass the selected date for filtering
+              onEditBooking={setEditingBooking}
               onBookingDeleted={handleBookingDeleted}
             />
           </>
