@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-
+import logo from '../assets/gameTheory.webp';
 const Header = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ const Header = () => {
     >
       <div className="container flex h-14 items-center max-lg:px-5">
         <a className="lg:hidden flex-1 cursor-pointer z-2">
-          <img src="/images/logos/gameTheory.webp" width={115} height={55} alt="logo" />
+          <img src={logo} width={115} height={55} alt="logo" />
         </a>
 
         <div
@@ -71,7 +71,7 @@ const Header = () => {
                     )}
                   >
                     <img
-                      src="/public/images/logos/gameTheory.webp"
+                      src={logo}
                       width={80}
                       height={30}
                       alt="logo"

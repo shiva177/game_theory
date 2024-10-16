@@ -1,3 +1,5 @@
+import logo from '../assets/gameTheory.webp';
+
 const Download = () => {
   return (
     <section>
@@ -15,7 +17,7 @@ const Download = () => {
                   <span className="download_tech-icon ">
                     {" "}
                     <img
-                      src="/public/images/logos/gameTheory.webp"
+                      src={logo}
                       width={160}
                       height={55}
                       alt="xora"
