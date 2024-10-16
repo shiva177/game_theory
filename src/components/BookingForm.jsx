@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { saveBooking, getBookings } from '../utils/localStorageUtils';
+import React, { useState, useEffect } from 'react';
+import { saveBooking, updateBooking } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
 
-const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated }) => {
+const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated, editingBooking, onBookingUpdated }) => {
   const [customerName, setCustomerName] = useState('');
   const [selectedCourt, setSelectedCourt] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [error, setError] = useState('');
 
-  // Get the bookings for the selected center and sport
-  const bookings = getBookings(selectedCenter.id, selectedSport.id);
+  // Populate form if editing an existing booking
+  useEffect(() => {
+    if (editingBooking) {
+      setCustomerName(editingBooking.customerName);
+      setSelectedCourt(editingBooking.courtId);
+      setSelectedTime(editingBooking.startTime);
+    }
+  }, [editingBooking]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,30 +27,45 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       return;
     }
 
-    // Check for double booking
-    const isSlotTaken = bookings.some(
-      booking => booking.courtId === parseInt(selectedCourt) && booking.startTime === selectedTime
-    );
+    if (editingBooking) {
+      // Update existing booking
+      const updatedBooking = {
+        ...editingBooking,
+        customerName,
+        courtId: parseInt(selectedCourt),
+        startTime: selectedTime,
+      };
+      updateBooking(selectedCenter.id, selectedSport.id, updatedBooking);
+      onBookingUpdated(updatedBooking);
+      toast.success('Booking updated successfully!');
+    } else {
+      // Check for double booking
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || {};
+      const isSlotTaken = bookings[selectedCenter.id]?.[selectedSport.id]?.some(
+        booking => booking.courtId === parseInt(selectedCourt) && booking.startTime === selectedTime
+      );
 
-    if (isSlotTaken) {
-      setError('This court is already booked for the selected time.');
-      toast.error('This court is already booked for the selected time.');
-      return;
+      if (isSlotTaken) {
+        setError('This court is already booked for the selected time.');
+        toast.error('This court is already booked for the selected time.');
+        return;
+      }
+
+      // Create new booking
+      const newBooking = {
+        id: Date.now(),
+        centerId: selectedCenter.id,
+        sportId: selectedSport.id,
+        courtId: parseInt(selectedCourt),
+        startTime: selectedTime,
+        customerName
+      };
+      saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save the booking specific to the center and sport
+      onBookingCreated(newBooking); // Trigger after successful creation
+      toast.success('Booking created successfully!');
     }
 
-    const newBooking = {
-      id: Date.now(),
-      centerId: selectedCenter.id,
-      sportId: selectedSport.id,
-      courtId: parseInt(selectedCourt),
-      startTime: selectedTime,
-      customerName
-    };
-
-    saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save the booking specific to the center and sport
-    onBookingCreated(newBooking); // Trigger after successful creation
-
-    // Clear form fields after booking is created
+    // Clear form fields after booking is created or updated
     setCustomerName('');
     setSelectedCourt('');
     setSelectedTime('');
@@ -53,7 +74,9 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
 
   return (
     <form onSubmit={handleSubmit} className="mt-6">
-      <h2 className="text-xl font-semibold mb-4">Create Booking</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {editingBooking ? 'Edit Booking' : 'Create Booking'}
+      </h2>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
@@ -79,7 +102,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
           <option value="">-- Choose a Court --</option>
           {availableCourts.length > 0 ? (
             availableCourts.map((court, index) => (
-              <option key={index} value={court}>{`Court ${court}`}</option>
+              <option key={index} value={court}>Court {court}</option>
             ))
           ) : (
             <option disabled>No courts available</option>
@@ -105,9 +128,9 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       <button
         type="submit"
         className={`px-4 py-2 ${availableCourts.length === 0 ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded hover:bg-blue-600`}
-        disabled={availableCourts.length === 0} // Disable button if no courts are available
+        disabled={availableCourts.length === 0}
       >
-        Create Booking
+        {editingBooking ? 'Save Changes' : 'Create Booking'}
       </button>
     </form>
   );
