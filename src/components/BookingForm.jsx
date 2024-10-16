@@ -8,7 +8,8 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
   const [selectedTime, setSelectedTime] = useState('');
   const [error, setError] = useState('');
 
-  const bookings = getBookings(selectedCenter.id, selectedSport.id); // Fetch only the bookings for the selected center and sport
+  // Get the bookings for the selected center and sport
+  const bookings = getBookings(selectedCenter.id, selectedSport.id);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,8 +41,8 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       customerName
     };
 
-    saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save booking specific to center and sport
-    onBookingCreated(newBooking); // Trigger only after successful creation
+    saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save the booking specific to the center and sport
+    onBookingCreated(newBooking); // Trigger after successful creation
 
     // Clear form fields after booking is created
     setCustomerName('');
@@ -104,7 +105,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       <button
         type="submit"
         className={`px-4 py-2 ${availableCourts.length === 0 ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded hover:bg-blue-600`}
-        disabled={availableCourts.length === 0}
+        disabled={availableCourts.length === 0} // Disable button if no courts are available
       >
         Create Booking
       </button>

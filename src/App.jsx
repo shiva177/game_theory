@@ -15,8 +15,7 @@ const centersData = [
     location: "Bangalore",
     sports: [
       { id: 1, name: "Badminton", courts: [1, 2, 3, 4] },
-      { id: 2, name: "Squash", courts: [1, 2, 3, 4, 5] },
-      { id: 3, name: "Tennis", courts: [1, 2, 3, 4, 5, 6] }
+      { id: 2, name: "Squash", courts: [1, 2, 3, 4, 5] }
     ]
   },
   {
@@ -24,22 +23,21 @@ const centersData = [
     name: "Koramangala",
     location: "Bangalore",
     sports: [
-      { id: 4, name: "Basketball", courts: [1, 2] },
-      { id: 5, name: "Handball", courts: [1, 2, 3] },
-      { id: 6, name: "Kabbadi", courts: [1, 2] }
+      { id: 3, name: "Tennis", courts: [1, 2, 3, 4, 5, 6] },
+      { id: 4, name: "Basketball", courts: [1, 2] }
     ]
-  },
-  // Additional centers can be added here
+  }
 ];
 
 function App() {
-  const [selectedCenter, setSelectedCenter] = useState(centersData[0]); // Show first center by default
-  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]); // Show first sport by default
-  const [bookings, setBookings] = useState(getBookings());
+  // Default to the first center and sport
+  const [selectedCenter, setSelectedCenter] = useState(centersData[0]);
+  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]);
+  const [bookings, setBookings] = useState(getBookings(selectedCenter.id, selectedSport.id));
 
   useEffect(() => {
-    setBookings(getBookings());
-  }, [selectedCenter, selectedSport]); // Refresh bookings when center/sport changes
+    setBookings(getBookings(selectedCenter.id, selectedSport.id));
+  }, [selectedCenter, selectedSport]); // Refresh bookings when center or sport changes
 
   const handleBookingCreated = (newBooking) => {
     setBookings([...bookings, newBooking]);
@@ -65,26 +63,31 @@ function App() {
       <div>
         <Navbar />
         <main className="container mx-auto p-4">
+          {/* Center and Sport Selection */}
           <CenterSelector
             centers={centersData}
             onSelectCenter={setSelectedCenter}
             onSelectSport={setSelectedSport}
           />
 
-          <BookingForm
-            selectedCenter={selectedCenter}
-            selectedSport={selectedSport}
-            availableCourts={selectedSport.courts}
-            onBookingCreated={handleBookingCreated}
-          />
-
-          <BookingGrid
-            selectedCenter={selectedCenter}
-            selectedSport={selectedSport}
-            bookings={bookings}
-            onBookingUpdated={handleBookingUpdated}
-            onBookingDeleted={handleBookingDeleted}
-          />
+          {/* Show the Booking Form and Grid only after both center and sport are selected */}
+          {selectedCenter && selectedSport && (
+            <>
+              <BookingForm
+                selectedCenter={selectedCenter}
+                selectedSport={selectedSport}
+                availableCourts={selectedSport.courts}
+                onBookingCreated={handleBookingCreated}
+              />
+              <BookingGrid
+                selectedCenter={selectedCenter}
+                selectedSport={selectedSport}
+                bookings={bookings}
+                onBookingUpdated={handleBookingUpdated}
+                onBookingDeleted={handleBookingDeleted}
+              />
+            </>
+          )}
 
           <ToastContainer />
         </main>

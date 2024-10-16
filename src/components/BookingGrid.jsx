@@ -15,13 +15,13 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onBookingUpdated
 
   const handleUpdate = () => {
     if (!editingBooking) return;
-    updateBooking(selectedCenter.id, selectedSport.id, editingBooking); // Update for the specific center and sport
+    updateBooking(selectedCenter.id, selectedSport.id, editingBooking); // Update specific to center and sport
     setIsEditing(false);
     onBookingUpdated(editingBooking); // Trigger update in parent
   };
 
   const handleDelete = (bookingId) => {
-    deleteBooking(selectedCenter.id, selectedSport.id, bookingId); // Delete for the specific center and sport
+    deleteBooking(selectedCenter.id, selectedSport.id, bookingId); // Delete specific to center and sport
     onBookingDeleted(bookingId); // Trigger delete in parent
   };
 
@@ -29,7 +29,11 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onBookingUpdated
 
   return (
     <div className="mt-6">
-      <h2 className="text-xl font-semibold mb-4">Schedule</h2>
+      {/* Dynamic Heading to show center and sport */}
+      <h2 className="text-xl font-semibold mb-4">
+        Schedule of "{selectedSport.name}" at "{selectedCenter.name}"
+      </h2>
+
       <div className="grid grid-cols-7 gap-4">
         <div></div> {/* Empty cell for time labels */}
         {hours.map((hour, index) => (
