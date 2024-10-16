@@ -8,6 +8,7 @@ const CenterSelector = ({ centers, onSelectCenter, onSelectSport }) => {
     const centerId = e.target.value;
     const center = centers.find(c => c.id === parseInt(centerId));
     setSelectedCenter(center);
+    setSelectedSport(null); // Reset sport selection when center changes
     onSelectCenter(center);
   };
 
@@ -29,19 +30,21 @@ const CenterSelector = ({ centers, onSelectCenter, onSelectSport }) => {
         ))}
       </select>
 
-      <div className="mt-4">
-        <label className="block text-sm font-medium text-gray-700">Select Sport</label>
-        <select
-          onChange={handleSportChange}
-          className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
-          disabled={!selectedCenter} // Disable dropdown if no center is selected
-        >
-          <option value="">-- Choose a Sport --</option>
-          {selectedCenter && selectedCenter.sports.map(sport => (
-            <option key={sport.id} value={sport.id}>{sport.name}</option>
-          ))}
-        </select>
-      </div>
+      {selectedCenter && (
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700">Select Sport</label>
+          <select
+            onChange={handleSportChange}
+            className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
+            disabled={!selectedCenter} // Disable dropdown if no center is selected
+          >
+            <option value="">-- Choose a Sport --</option>
+            {selectedCenter.sports.map(sport => (
+              <option key={sport.id} value={sport.id}>{sport.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 };

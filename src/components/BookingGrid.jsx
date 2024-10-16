@@ -15,13 +15,13 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onBookingUpdated
 
   const handleUpdate = () => {
     if (!editingBooking) return;
-    updateBooking(editingBooking);
+    updateBooking(selectedCenter.id, selectedSport.id, editingBooking); // Update for the specific center and sport
     setIsEditing(false);
     onBookingUpdated(editingBooking); // Trigger update in parent
   };
 
   const handleDelete = (bookingId) => {
-    deleteBooking(bookingId);
+    deleteBooking(selectedCenter.id, selectedSport.id, bookingId); // Delete for the specific center and sport
     onBookingDeleted(bookingId); // Trigger delete in parent
   };
 
@@ -30,20 +30,16 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings, onBookingUpdated
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">Schedule</h2>
-      <div className="grid grid-cols-7 gap-2">
-        {/* Header Row for Time Slots */}
-        <div className="font-bold">Court</div>
+      <div className="grid grid-cols-7 gap-4">
+        <div></div> {/* Empty cell for time labels */}
         {hours.map((hour, index) => (
           <div key={index} className="text-center font-bold">{hour}</div>
         ))}
 
-        {/* Rows for Courts */}
         {selectedSport.courts.map((court, courtIndex) => (
           <React.Fragment key={courtIndex}>
-            {/* Court Label */}
             <div className="font-bold text-center">{`Court ${court}`}</div>
 
-            {/* Time Slots for Each Court */}
             {hours.map((hour, index) => {
               const booking = bookings.find(b => b.startTime === hour && b.courtId === court);
 

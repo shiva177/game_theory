@@ -8,9 +8,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
   const [selectedTime, setSelectedTime] = useState('');
   const [error, setError] = useState('');
 
-  const bookings = getBookings().filter(
-    booking => booking.centerId === selectedCenter?.id && booking.sportId === selectedSport?.id
-  );
+  const bookings = getBookings(selectedCenter.id, selectedSport.id); // Fetch only the bookings for the selected center and sport
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       customerName
     };
 
-    saveBooking(newBooking);
+    saveBooking(selectedCenter.id, selectedSport.id, newBooking); // Save booking specific to center and sport
     onBookingCreated(newBooking); // Trigger only after successful creation
 
     // Clear form fields after booking is created
