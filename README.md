@@ -18,6 +18,8 @@ This project is a Sports Center Booking System where users can book courts at di
 
 This project was built using React.js with Tailwind CSS for the frontend, and it uses local storage to store booking data. There is no external backend or database for this project.
 
+![image](https://github.com/user-attachments/assets/d02b9a89-d22d-4e06-b5da-424ff1292e30)
+
 
 ## Features
 - **Multiple Centers and Sports:** Support for multiple sports centers, each offering different sports like badminton, tennis, squash, and more.
@@ -91,5 +93,6 @@ The application can be easily deployed to hosting services like Netlify or Verce
 - **No Backend:** This is a frontend-only application with no backend server or external database.
 
 ## Links
-- **Deployed Application:** [App Link](https://game-theory-beige.vercel.app/) (Replace with your actual deployed app link)
+- **Deployed Application:** [App Link](https://game-theory-beige.vercel.app/)
 - **Frontend GitHub Repository:** [GitHub Link](https://github.com/shiva177/game_theory.git)
+- - **Report File:** [File Link](https://github.com/shiva177/game_theory/blob/main/Report.pdf)
