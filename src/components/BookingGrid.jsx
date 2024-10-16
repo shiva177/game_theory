@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { getBookings, deleteBooking, saveBooking } from '../utils/localStorageUtils';
+import React, { useEffect, useState } from 'react';
+import { getBookings, deleteBooking, updateBooking } from '../utils/localStorageUtils';
+import { toast } from 'react-toastify';
 
-const BookingGrid = ({ selectedCenter, selectedSport }) => {
+const BookingGrid = ({ selectedCenter, selectedSport, bookings }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingBooking, setEditingBooking] = useState(null);
-  
-  const bookings = getBookings().filter(
-    booking => booking.centerId === selectedCenter.id && booking.sportId === selectedSport.id
-  );
+  const [message, setMessage] = useState('');
 
   const hours = ["4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM"];
 
@@ -18,15 +16,22 @@ const BookingGrid = ({ selectedCenter, selectedSport }) => {
 
   const handleUpdate = () => {
     if (!editingBooking) return;
-    deleteBooking(editingBooking.id); // Remove the old booking
-    saveBooking(editingBooking);      // Save the updated booking
+    updateBooking(editingBooking);
     setIsEditing(false);
-    window.location.reload();          // Reload to reflect changes
+    toast.success('Booking updated successfully!');
   };
+
+  const handleDelete = (bookingId) => {
+    deleteBooking(bookingId);
+    toast.success('Booking deleted successfully!');
+  };
+
+  const isBeingEdited = (bookingId) => editingBooking && editingBooking.id === bookingId;
 
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">Schedule</h2>
+      {message && <div className="text-green-500 mb-4">{message}</div>}
       <div className="grid grid-cols-7 gap-4">
         <div></div> {/* Empty cell for time labels */}
         {Array(6).fill().map((_, i) => <div key={i} className="text-center font-bold">Court {i + 1}</div>)}
@@ -44,16 +49,15 @@ const BookingGrid = ({ selectedCenter, selectedSport }) => {
                       <p>{booking.customerName}</p>
                       <button
                         className="text-blue-500"
+                        disabled={isBeingEdited(booking.id)}
                         onClick={() => handleEdit(booking)}
                       >
                         Edit
                       </button>
                       <button
                         className="text-red-500 ml-2"
-                        onClick={() => {
-                          deleteBooking(booking.id);
-                          window.location.reload(); // Reload to update bookings
-                        }}
+                        disabled={isBeingEdited(booking.id)}
+                        onClick={() => handleDelete(booking.id)}
                       >
                         Cancel
                       </button>

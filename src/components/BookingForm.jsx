@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { saveBooking, getBookings } from '../utils/localStorageUtils';
+import { toast } from 'react-toastify';
 
 const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated }) => {
   const [customerName, setCustomerName] = useState('');
@@ -7,7 +8,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
   const [selectedTime, setSelectedTime] = useState('');
   const [error, setError] = useState('');
 
-  // Ensure bookings for the selected center and sport are retrieved
   const bookings = getBookings().filter(
     booking => booking.centerId === selectedCenter?.id && booking.sportId === selectedSport?.id
   );
@@ -18,6 +18,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
     // Input validation
     if (!customerName || !selectedCourt || !selectedTime) {
       setError('Please fill out all fields.');
+      toast.error('Please fill out all fields.');
       return;
     }
 
@@ -28,6 +29,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
 
     if (isSlotTaken) {
       setError('This court is already booked for the selected time.');
+      toast.error('This court is already booked for the selected time.');
       return;
     }
 
@@ -37,18 +39,18 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       sportId: selectedSport.id,
       courtId: parseInt(selectedCourt),
       startTime: selectedTime,
-      customerName: customerName
+      customerName
     };
 
     saveBooking(newBooking);
-    onBookingCreated(newBooking); // Pass the new booking to the parent component
+    onBookingCreated(newBooking);
 
     // Clear form fields after booking is created
     setCustomerName('');
     setSelectedCourt('');
     setSelectedTime('');
     setError('');
-    alert('Booking created successfully!');
+    toast.success('Booking created successfully!');
   };
 
   return (
@@ -104,7 +106,8 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
 
       <button
         type="submit"
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className={`px-4 py-2 ${availableCourts.length === 0 ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded hover:bg-blue-600`}
+        disabled={availableCourts.length === 0}
       >
         Create Booking
       </button>

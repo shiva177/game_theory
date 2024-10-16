@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import CenterSelector from './components/CenterSelector';
 import BookingGrid from './components/BookingGrid';
 import BookingForm from './components/BookingForm';
 import { getBookings } from './utils/localStorageUtils';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const centersData = [
   {
@@ -25,14 +27,17 @@ const centersData = [
 ];
 
 function App() {
-
-
-  const [selectedCenter, setSelectedCenter] = useState(null);
-  const [selectedSport, setSelectedSport] = useState(null);
+  const [selectedCenter, setSelectedCenter] = useState(centersData[0]); // Show first center by default
+  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]); // Show first sport by default
   const [bookings, setBookings] = useState(getBookings());
+
+  useEffect(() => {
+    setBookings(getBookings());
+  }, [selectedCenter, selectedSport]); // Refresh bookings when center/sport changes
 
   const handleBookingCreated = (newBooking) => {
     setBookings([...bookings, newBooking]);
+    toast.success('Booking created successfully!');
   };
 
   const handleBookingUpdated = (updatedBookings) => {
@@ -41,33 +46,32 @@ function App() {
 
   return (
     <ErrorBoundary>
-    <div>
-      <Navbar />
-      <main className="container mx-auto p-4">
-        <CenterSelector
-          centers={centersData}
-          onSelectCenter={setSelectedCenter}
-          onSelectSport={setSelectedSport}
-        />
+      <div>
+        <Navbar />
+        <main className="container mx-auto p-4">
+          <CenterSelector
+            centers={centersData}
+            onSelectCenter={setSelectedCenter}
+            onSelectSport={setSelectedSport}
+          />
 
-        {selectedCenter && selectedSport && (
-          <>
-            <BookingForm
-              selectedCenter={selectedCenter}
-              selectedSport={selectedSport}
-              availableCourts={selectedSport.courts}
-              onBookingCreated={handleBookingCreated}
-            />
-            <BookingGrid
-              selectedCenter={selectedCenter}
-              selectedSport={selectedSport}
-              bookings={bookings}
-              onBookingUpdated={handleBookingUpdated}
-            />
-          </>
-        )}
-      </main>
-    </div>
+          <BookingForm
+            selectedCenter={selectedCenter}
+            selectedSport={selectedSport}
+            availableCourts={selectedSport.courts}
+            onBookingCreated={handleBookingCreated}
+          />
+
+          <BookingGrid
+            selectedCenter={selectedCenter}
+            selectedSport={selectedSport}
+            bookings={bookings}
+            onBookingUpdated={handleBookingUpdated}
+          />
+
+          <ToastContainer />
+        </main>
+      </div>
     </ErrorBoundary>
   );
 }
