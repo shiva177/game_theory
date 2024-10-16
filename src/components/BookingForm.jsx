@@ -43,14 +43,13 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
     };
 
     saveBooking(newBooking);
-    onBookingCreated(newBooking);
+    onBookingCreated(newBooking); // Trigger only after successful creation
 
     // Clear form fields after booking is created
     setCustomerName('');
     setSelectedCourt('');
     setSelectedTime('');
     setError('');
-    toast.success('Booking created successfully!');
   };
 
   return (

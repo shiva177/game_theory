@@ -12,18 +12,24 @@ const centersData = [
   {
     id: 1,
     name: "Indiranagar",
+    location: "Bangalore",
     sports: [
-      { id: 1, name: "Badminton", courts: [1, 2] },
-      { id: 2, name: "Squash", courts: [3] }
+      { id: 1, name: "Badminton", courts: [1, 2, 3, 4] },
+      { id: 2, name: "Squash", courts: [1, 2, 3, 4, 5] },
+      { id: 3, name: "Tennis", courts: [1, 2, 3, 4, 5, 6] }
     ]
   },
   {
     id: 2,
     name: "Koramangala",
+    location: "Bangalore",
     sports: [
-      { id: 3, name: "Tennis", courts: [4, 5] }
+      { id: 4, name: "Basketball", courts: [1, 2] },
+      { id: 5, name: "Handball", courts: [1, 2, 3] },
+      { id: 6, name: "Kabbadi", courts: [1, 2] }
     ]
-  }
+  },
+  // Additional centers can be added here
 ];
 
 function App() {
@@ -40,8 +46,18 @@ function App() {
     toast.success('Booking created successfully!');
   };
 
-  const handleBookingUpdated = (updatedBookings) => {
+  const handleBookingUpdated = (updatedBooking) => {
+    const updatedBookings = bookings.map(booking =>
+      booking.id === updatedBooking.id ? updatedBooking : booking
+    );
     setBookings(updatedBookings);
+    toast.success('Booking updated successfully!');
+  };
+
+  const handleBookingDeleted = (bookingId) => {
+    const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+    setBookings(updatedBookings);
+    toast.success('Booking deleted successfully!');
   };
 
   return (
@@ -67,6 +83,7 @@ function App() {
             selectedSport={selectedSport}
             bookings={bookings}
             onBookingUpdated={handleBookingUpdated}
+            onBookingDeleted={handleBookingDeleted}
           />
 
           <ToastContainer />

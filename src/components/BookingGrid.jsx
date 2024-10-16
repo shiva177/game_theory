@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { getBookings, deleteBooking, updateBooking } from '../utils/localStorageUtils';
+import React, { useState } from 'react';
+import { updateBooking, deleteBooking } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
 
-const BookingGrid = ({ selectedCenter, selectedSport, bookings }) => {
+const BookingGrid = ({ selectedCenter, selectedSport, bookings, onBookingUpdated, onBookingDeleted }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingBooking, setEditingBooking] = useState(null);
-  const [message, setMessage] = useState('');
 
   const hours = ["4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM"];
 
@@ -18,12 +17,12 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings }) => {
     if (!editingBooking) return;
     updateBooking(editingBooking);
     setIsEditing(false);
-    toast.success('Booking updated successfully!');
+    onBookingUpdated(editingBooking); // Trigger update in parent
   };
 
   const handleDelete = (bookingId) => {
     deleteBooking(bookingId);
-    toast.success('Booking deleted successfully!');
+    onBookingDeleted(bookingId); // Trigger delete in parent
   };
 
   const isBeingEdited = (bookingId) => editingBooking && editingBooking.id === bookingId;
@@ -31,19 +30,25 @@ const BookingGrid = ({ selectedCenter, selectedSport, bookings }) => {
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">Schedule</h2>
-      {message && <div className="text-green-500 mb-4">{message}</div>}
-      <div className="grid grid-cols-7 gap-4">
-        <div></div> {/* Empty cell for time labels */}
-        {Array(6).fill().map((_, i) => <div key={i} className="text-center font-bold">Court {i + 1}</div>)}
-
+      <div className="grid grid-cols-7 gap-2">
+        {/* Header Row for Time Slots */}
+        <div className="font-bold">Court</div>
         {hours.map((hour, index) => (
-          <React.Fragment key={index}>
-            <div className="text-right pr-4">{hour}</div> {/* Time Label */}
-            {Array(6).fill().map((_, courtIndex) => {
-              const booking = bookings.find(b => b.startTime === hour && b.courtId === courtIndex + 1);
+          <div key={index} className="text-center font-bold">{hour}</div>
+        ))}
+
+        {/* Rows for Courts */}
+        {selectedSport.courts.map((court, courtIndex) => (
+          <React.Fragment key={courtIndex}>
+            {/* Court Label */}
+            <div className="font-bold text-center">{`Court ${court}`}</div>
+
+            {/* Time Slots for Each Court */}
+            {hours.map((hour, index) => {
+              const booking = bookings.find(b => b.startTime === hour && b.courtId === court);
 
               return (
-                <div key={courtIndex} className="border border-gray-300 p-2">
+                <div key={index} className="border border-gray-300 p-2 text-center">
                   {booking ? (
                     <div className="bg-green-200 p-2 rounded">
                       <p>{booking.customerName}</p>

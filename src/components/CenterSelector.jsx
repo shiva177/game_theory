@@ -25,7 +25,7 @@ const CenterSelector = ({ centers, onSelectCenter, onSelectSport }) => {
       <select onChange={handleCenterChange} className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm">
         <option value="">-- Choose a Center --</option>
         {centers.map(center => (
-          <option key={center.id} value={center.id}>{center.name}</option>
+          <option key={center.id} value={center.id}>{center.name} - {center.location}</option>
         ))}
       </select>
 
