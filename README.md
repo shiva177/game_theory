@@ -1,86 +1,95 @@
-# React + Vite                                                                                              #College ID- IIT2021177
+# Sports Center Booking System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**College ID:** IIT2021177
 
-Currently, two official plugins are available:
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Prerequisites](#prerequisites)
+5. [Setup Instructions](#setup-instructions)
+6. [Running the Project](#running-the-project)
+7. [Deployment](#deployment)
+8. [Assumptions and Limitations](#assumptions-and-limitations)
+9. [Links](#links)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Overview
+This project is a Sports Center Booking System where users can book courts at different centers for various sports. The operations team can view, create, update, and delete bookings using a simple UI. The system supports multiple sports centers, each offering several courts for different sports.
 
-  #Project Overview
-  
-  -This application is designed for a sports technology company's operations team to manage bookings at multiple centers. Each center offers various sports, and each sport has multiple courts/resources. The operations team can view and create bookings for any sport in their facility.
+This project was built using React.js with Tailwind CSS for the frontend, and it uses local storage to store booking data. There is no external backend or database for this project.
 
-#Goal :-
--The goal of the project is to build a booking app for the operations team at a sports technology company. The key features include:
 
--Managing bookings for multiple centers.
--Supporting multiple sports and courts at each center.
--Ensuring no double bookings for the same court and time slot.
--Viewing and creating bookings via a simple user interface.
+## Features
+- **Multiple Centers and Sports:** Support for multiple sports centers, each offering different sports like badminton, tennis, squash, and more.
+- **Court Booking:** Users can book courts for a specific sport at a given time slot.
+- **View Bookings:** A dynamic booking grid displays all bookings for the selected center and sport, showing available and occupied slots.
+- **CRUD Operations:** Users can create, update, and delete bookings for each center and sport.
+- **Local Storage:** All bookings are stored in the browser’s local storage, ensuring data persistence across sessions.
+- **Error Handling:** Graceful error handling with an ErrorBoundary component to prevent crashes.
+- **Notifications:** Real-time success and error notifications using react-toastify for a smoother user experience.
 
-#Setup Instructions
+## Tech Stack
+**Frontend:**
+- React.js (for building the user interface)
+- Tailwind CSS (for styling)
+- React Router (for managing routes between pages)
+- React Toastify (for success/error notifications)
 
+**Storage:**
+- Local Storage (to store bookings in the browser)
+
+## Prerequisites
+Before you begin, ensure you have met the following requirements:
+- Node.js (version 14.x or higher)
+- npm (Node package manager)
+- Modern browser (Chrome, Firefox, or Edge)
+
+## Setup Instructions
 1. Clone the repository:
-git clone https://github.com/shiva177/game_theory.git
-cd directory_name
+   ```bash
+   git clone https://github.com/shiva177/game_theory.git
+   cd sports-booking-system
+   ```
+2. Install dependencies: Run the following command to install the required npm packages:
+   ```bash
+   npm install
+   ```
+3. Run the development server: Start the development server with the command:
+   ```bash
+   npm run dev
+   ```
+   The application will open in your default browser at [http://localhost:5173](http://localhost:5173).
 
-3. Backend Setup:
--Navigate to the backend folder:
--cd backend
--Install backend dependencies:
--npm install
--Create a .env file in the backend folder with the following environment variables:
+## Running the Project
+### Running the Development Server
+To run the app in development mode, use the following command:
+```bash
+npm run dev
+```
+This will launch the app at [http://localhost:5173](http://localhost:5173) where you can test and modify the code.
 
-Start the backend server:
-npm start
-The backend should now be running at http://localhost:5000.
+### Running the Production Build
+To create a production build of the application:
+```bash
+npm run build
+```
+This will generate a `build/` folder with the optimized production version of the app.
 
-4. Frontend Setup:
--Navigate to the frontend folder:
--cd frontend
--Install frontend dependencies:
-npm install
-Ensure the API URL for the backend is correctly configured in your frontend code (e.g., http://localhost:5000).
+## Deployment
+The application can be easily deployed to hosting services like Netlify or Vercel. Here are the deployment steps:
 
-Start the frontend development server:
-npm start
-The frontend should now be running at http://localhost:3000.
+### Deploying to Vercel:
+1. Sign up or log in to Vercel.
+2. Select **New Project** and import the GitHub repository.
+3. Follow the instructions to deploy the main branch.
+4. Vercel will handle the build process and provide a live link.
 
-5.Running the Project
-Backend:
+## Assumptions and Limitations
+- **Storage:** The application uses local storage to store bookings. This means bookings are only saved locally on the user's machine and are not shared between users or devices.
+- **No Authentication:** There is no user authentication or role-based access control in this application.
+- **Single-Day Bookings:** The system currently allows booking for only one day. Multiple dates or date ranges are not supported.
+- **No Backend:** This is a frontend-only application with no backend server or external database.
 
--Ensure your MongoDB server is running (or you are connected to MongoDB Atlas).
-Run the backend server using npm start from the backend directory.
-The server should be accessible at http://localhost:5000.
-
-Frontend:
-
--In a separate terminal, run the frontend development server using npm start from the frontend directory.
-The app should open in your browser at http://localhost:3000.
-
-Deployment Instructions
-
-1. Backend Deployment (Heroku)
-Create a Heroku account and install the Heroku CLI.
-Login to Heroku:
-heroku login
-In the backend folder, initialize a git repository (if not already done):
-
-git init
-Create a Heroku app:
-
-heroku create your-app-name
-Set your environment variables on Heroku:
-heroku config:set MONGO_URI=your-mongodb-connection-string
-Deploy to Heroku:
-
-git add .
-git commit -m "Deploying backend"
-git push heroku master
-
-2. Frontend Deployment (Vercel)
-Create a Vercel account and install the Vercel.
-
-Login to Vercel:
-Navigate to the frontend folder and deploy the app:
+## Links
+- **Deployed Application:** [App Link](https://game-theory-beige.vercel.app/) (Replace with your actual deployed app link)
+- **Frontend GitHub Repository:** [GitHub Link](https://github.com/shiva177/game_theory.git)

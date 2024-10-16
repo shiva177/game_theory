@@ -74,7 +74,7 @@ function SchedulePage() {
   };
 
   return (
-    <div className="container flex items-center h-screen mx-auto mb-60 lg:mb-0 mt-60 lg:mt-10 justify-center p-4">
+    <div className="container flex items-center h-screen mx-auto mb-60 lg:mb-0 mt-60 lg:mt-24 justify-center p-4">
       {/* Responsive grid: Form becomes full width on small screens */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar (BookingForm with Glassmorphism) */}
