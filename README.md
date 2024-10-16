@@ -94,5 +94,5 @@ The application can be easily deployed to hosting services like Netlify or Verce
 
 ## Links
 - **Deployed Application:** [App Link](https://game-theory-beige.vercel.app/)
-- **Frontend GitHub Repository:** [GitHub Link](https://github.com/shiva177/game_theory.git)
+- **GitHub Repository:** [GitHub Link](https://github.com/shiva177/game_theory.git)
 - **Report File:** [File Link](https://github.com/shiva177/game_theory/blob/main/Report.pdf)
