@@ -18,7 +18,7 @@ const Hero = () => {
              Game Slot Booking Platform
             </p>
             <Link to="/booking" offset={-100} spy smooth>
-              <Button icon="/images/zap.svg">Try it now</Button>
+              <Button icon="/images/zap.svg">Book now</Button>
             </Link>
           </div>
 

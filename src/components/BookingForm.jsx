@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { saveBooking, updateBooking } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
+import Button from './Button';
 
 const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBookingCreated, editingBooking, onBookingUpdated, selectedDate }) => {
   const [customerName, setCustomerName] = useState('');
@@ -118,13 +119,13 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
         </select>
       </div>
 
-      <button
+      <Button
         type="submit"
         className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
         disabled={availableCourts.length === 0}
       >
         {editingBooking ? 'Save Changes' : 'Create Booking'}
-      </button>
+      </Button>
     </form>
   );
 };

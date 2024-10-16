@@ -63,7 +63,7 @@ const Header = () => {
 
                 <li className="nav-logo">
                   <Link
-                    to="hero"
+                    to="/"
                     offset={-250}
                     spy
                     smooth
