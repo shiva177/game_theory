@@ -6,6 +6,15 @@ import { getAllBookings } from '../utils/localStorageUtils';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Helper function to get today's date in YYYY-MM-DD format
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Ensure 2 digits for month
+  const day = String(today.getDate()).padStart(2, '0'); // Ensure 2 digits for day
+  return `${year}-${month}-${day}`;
+};
+
 const centersData = [
   {
     id: 1,
@@ -28,12 +37,14 @@ const centersData = [
 ];
 
 function SchedulePage() {
-  const [selectedCenter, setSelectedCenter] = useState(centersData[0]);
-  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]);
+  // Default to the first center and first sport from centersData
+  const [selectedCenter, setSelectedCenter] = useState(centersData[0]); // Default center
+  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]); // Default sport
   const [allBookings, setAllBookings] = useState({});
-  const [selectedDate, setSelectedDate] = useState(''); // State for date
+  const [selectedDate, setSelectedDate] = useState(getTodayDate()); // Default to today's date
   const [editingBooking, setEditingBooking] = useState(null);
 
+  // Fetch all bookings for the default center and sport on component mount
   useEffect(() => {
     if (selectedCenter && selectedSport) {
       setAllBookings(getAllBookings(selectedCenter.id, selectedSport.id));
