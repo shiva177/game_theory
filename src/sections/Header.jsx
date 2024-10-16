@@ -1,4 +1,4 @@
-import { Link as LinkScroll } from "react-scroll";
+
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ const Header = () => {
   }, []);
 
   const NavLink = ({ title }) => (
-    <LinkScroll
+    <Link
       onClick={() => setIsOpen(false)}
       to={title}
       offset={-100}
@@ -30,7 +30,7 @@ const Header = () => {
       className="base-bold text-p4 uppercase transition-colors duration-500 cursor-pointer hover:text-p1 max-lg:my-4 max-lg:h5"
     >
       {title}
-    </LinkScroll>
+    </Link>
   );
 
   return (
@@ -42,7 +42,7 @@ const Header = () => {
     >
       <div className="container flex h-14 items-center max-lg:px-5">
         <a className="lg:hidden flex-1 cursor-pointer z-2">
-          <img src="/public/images/logos/gameTheory.webp" width={115} height={55} alt="logo" />
+          <img src="/images/logos/gameTheory.webp" width={115} height={55} alt="logo" />
         </a>
 
         <div
@@ -61,7 +61,7 @@ const Header = () => {
                 </li>
 
                 <li className="nav-logo">
-                  <LinkScroll
+                  <Link
                     to="hero"
                     offset={-250}
                     spy
@@ -76,7 +76,7 @@ const Header = () => {
                       height={30}
                       alt="logo"
                     />
-                  </LinkScroll>
+                  </Link>
                 </li>
 
                 <li className="nav-li font-bold text-white text-lg hover:text-blue-300">
