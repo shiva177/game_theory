@@ -19,7 +19,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Input validation
     if (!customerName || !selectedCourt || !selectedTime || !selectedDate) {
       setError('Please fill out all fields.');
       toast.error('Please fill out all fields.');
@@ -27,7 +26,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
     }
 
     if (editingBooking) {
-      // Update existing booking
       const updatedBooking = {
         ...editingBooking,
         customerName,
@@ -39,7 +37,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       onBookingUpdated(updatedBooking);
       toast.success('Booking updated successfully!');
     } else {
-      // Check for double booking
       const allBookings = JSON.parse(localStorage.getItem('bookings')) || {};
       const isSlotTaken = allBookings[selectedCenter.id]?.[selectedSport.id]?.[selectedDate]?.some(
         booking => booking.courtId === parseInt(selectedCourt) && booking.startTime === selectedTime
@@ -51,7 +48,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
         return;
       }
 
-      // Create new booking
       const newBooking = {
         id: Date.now(),
         centerId: selectedCenter.id,
@@ -66,7 +62,6 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
       toast.success('Booking created successfully!');
     }
 
-    // Clear form fields after booking is created or updated
     setCustomerName('');
     setSelectedCourt('');
     setSelectedTime('');
@@ -74,49 +69,46 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6">
-      <h2 className="text-xl font-semibold mb-4">
+    <form onSubmit={handleSubmit} className="space-y-4 text-black">
+      <h2 className="text-2xl font-semibold text-black mb-6">
         {editingBooking ? 'Edit Booking' : 'Create Booking'}
       </h2>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Customer Name</label>
+      <div className="space-y-2">
+        <label className="block text-lg font-medium text-black/80">Customer Name</label>
         <input
           type="text"
+          placeholder='Name'
           value={customerName}
           onChange={(e) => setCustomerName(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
+          className="block w-full p-2 border border-gray-300 bg-white/80 backdrop-blur-lg rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Select Court</label>
+      <div className="space-y-2">
+        <label className="block text-lg font-medium text-black/80">Select Court</label>
         <select
           value={selectedCourt}
           onChange={(e) => setSelectedCourt(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
+          className="block w-full p-2 border border-gray-300 bg-white/80 backdrop-blur-lg rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         >
           <option value="">-- Choose a Court --</option>
-          {availableCourts.length > 0 ? (
-            availableCourts.map((court, index) => (
-              <option key={index} value={court}>Court {court}</option>
-            ))
-          ) : (
-            <option disabled>No courts available</option>
-          )}
+          {availableCourts.map((court, index) => (
+            <option key={index} value={court}>Court {court}</option>
+          ))}
         </select>
       </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Select Time</label>
+      <div className="space-y-2">
+        <label className="block text-lg font-medium text-black/80">Select Time</label>
         <select
           value={selectedTime}
           onChange={(e) => setSelectedTime(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
+          className="block w-full p-2 border border-gray-300 bg-white/80 backdrop-blur-lg rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         >
           <option value="">-- Choose a Time --</option>
@@ -128,7 +120,7 @@ const BookingForm = ({ selectedCenter, selectedSport, availableCourts = [], onBo
 
       <button
         type="submit"
-        className={`px-4 py-2 ${availableCourts.length === 0 ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded hover:bg-blue-600`}
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
         disabled={availableCourts.length === 0}
       >
         {editingBooking ? 'Save Changes' : 'Create Booking'}

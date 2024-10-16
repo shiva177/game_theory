@@ -10,8 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const getTodayDate = () => {
   const today = new Date();
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Ensure 2 digits for month
-  const day = String(today.getDate()).padStart(2, '0'); // Ensure 2 digits for day
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
@@ -37,14 +37,12 @@ const centersData = [
 ];
 
 function SchedulePage() {
-  // Default to the first center and first sport from centersData
-  const [selectedCenter, setSelectedCenter] = useState(centersData[0]); // Default center
-  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]); // Default sport
+  const [selectedCenter, setSelectedCenter] = useState(centersData[0]);
+  const [selectedSport, setSelectedSport] = useState(centersData[0].sports[0]);
   const [allBookings, setAllBookings] = useState({});
-  const [selectedDate, setSelectedDate] = useState(getTodayDate()); // Default to today's date
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
   const [editingBooking, setEditingBooking] = useState(null);
 
-  // Fetch all bookings for the default center and sport on component mount
   useEffect(() => {
     if (selectedCenter && selectedSport) {
       setAllBookings(getAllBookings(selectedCenter.id, selectedSport.id));
@@ -76,45 +74,53 @@ function SchedulePage() {
   };
 
   return (
-    <div>
-      <main className="container mx-auto mt-40 p-4">
-        <CenterSelector
-          centers={centersData}
-          onSelectCenter={setSelectedCenter}
-          onSelectSport={setSelectedSport}
-        />
+    <div className="container flex items-center h-screen mx-auto mt-10 justify-center p-4">
+      {/* Responsive grid: Form becomes full width on small screens */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar (BookingForm with Glassmorphism) */}
+        <div className="lg:col-span-1 bg-white/40 backdrop-blur-lg p-6 rounded-lg shadow-lg border border-gray-200">
+          <BookingForm
+            selectedCenter={selectedCenter}
+            selectedSport={selectedSport}
+            availableCourts={selectedSport.courts}
+            onBookingCreated={handleBookingCreated}
+            editingBooking={editingBooking}
+            onBookingUpdated={handleBookingUpdated}
+            selectedDate={selectedDate}
+          />
+        </div>
 
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className="mt-4 block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm"
-          placeholder="Select Date"
-        />
+        {/* Main content (BookingGrid with dark theme) */}
+        <div className="lg:col-span-3 bg-gray-900 border p-6 rounded-lg shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-4">
+            <CenterSelector
+              centers={centersData}
+              onSelectCenter={setSelectedCenter}
+              onSelectSport={setSelectedSport}
+            />
 
-        {selectedCenter && selectedSport && selectedDate && (
-          <>
-            <BookingForm
-              selectedCenter={selectedCenter}
-              selectedSport={selectedSport}
-              availableCourts={selectedSport.courts}
-              onBookingCreated={handleBookingCreated}
-              editingBooking={editingBooking}
-              onBookingUpdated={handleBookingUpdated}
-              selectedDate={selectedDate} // Pass the selected date
+            {/* Date picker */}
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto p-2 border border-gray-300 bg-gray-700 text-white rounded-md shadow-sm"
             />
-            <BookingGrid
-              selectedCenter={selectedCenter}
-              selectedSport={selectedSport}
-              allBookings={allBookings} // Pass all bookings
-              selectedDate={selectedDate} // Pass the selected date for filtering
-              onEditBooking={setEditingBooking}
-              onBookingDeleted={handleBookingDeleted}
-            />
-          </>
-        )}
-        <ToastContainer />
-      </main>
+          </div>
+
+          {/* Booking grid */}
+          <BookingGrid
+            selectedCenter={selectedCenter}
+            selectedSport={selectedSport}
+            allBookings={allBookings}
+            selectedDate={selectedDate}
+            onEditBooking={setEditingBooking}
+            onBookingDeleted={handleBookingDeleted}
+          />
+        </div>
+      </div>
+
+      <ToastContainer />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import logo from '../assets/gameTheory.webp';
+import '../pages/page.css'
 const Header = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
